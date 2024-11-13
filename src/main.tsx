@@ -1,10 +1,32 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import {StrictMode} from 'react'
 import './index.css'
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {createRoot} from 'react-dom/client'
 import App from './App.tsx'
+import Home from "./pages/Home.tsx";
+import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
+
+// React Router Dom 설정
+const routes: RouteObject[] = [
+    {
+        path: '/',
+        element: <App />,
+        children: [
+            {index: true, element: <Home />},
+        ],
+    },
+];
+
+// 라우터 생성
+const router = createBrowserRouter(routes);
+
+// React Query Client 생성
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>,
 )
