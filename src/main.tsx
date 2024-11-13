@@ -1,10 +1,15 @@
 import {StrictMode} from 'react'
 import './index.css'
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+
 import {createRoot} from 'react-dom/client'
+import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
+
 import App from './App.tsx'
 import Home from "./pages/Home.tsx";
-import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
+import Company from "./pages/Company.tsx";
+import User from "./pages/User.tsx";
+import Question from "./pages/Question.tsx";
 
 // React Router Dom 설정
 const routes: RouteObject[] = [
@@ -13,6 +18,9 @@ const routes: RouteObject[] = [
         element: <App />,
         children: [
             {index: true, element: <Home />},
+            {path: '/user', element: <User />},
+            {path: '/company', element: <Company />},
+            {path: '/question', element: <Question />},
         ],
     },
 ];
