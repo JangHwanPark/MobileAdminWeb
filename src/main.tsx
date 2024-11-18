@@ -7,7 +7,7 @@ import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom
 
 import App from './App.tsx'
 import Home from "./pages/Home.tsx";
-import Company from "./pages/Company.tsx";
+import Company from "./Company/pages/Company.tsx";
 import User from "./pages/User.tsx";
 import Question from "./pages/Question.tsx";
 
