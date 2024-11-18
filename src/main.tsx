@@ -6,10 +6,10 @@ import {createRoot} from 'react-dom/client'
 import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
 
 import App from './App.tsx'
-import Home from "./pages/Home.tsx";
+import Home from "./Home/pages/Home.tsx";
 import Company from "./Company/pages/Company.tsx";
-import User from "./pages/User.tsx";
-import Question from "./pages/Question.tsx";
+import User from "./User/pages/User.tsx";
+import Question from "./Question/pages/Question.tsx";
 
 // React Router Dom 설정
 const routes: RouteObject[] = [

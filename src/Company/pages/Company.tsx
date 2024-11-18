@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import CompanyActivities from "../component/CompanyActivities.tsx";
-import PopularTopics from "../component/PopularTopics.tsx";
+import CompanyActivities from "../components/CompanyActivities.tsx";
+import PopularTopics from "../components/PopularTopics.tsx";
 
 // 첫 번째 API 호출
 const fetchCompanyActivities = async () => {
@@ -16,12 +16,18 @@ const fetchPopularTopics = async () => {
 };
 
 const CompanyPage = () => {
-    const { data: activities, error: activitiesError, isLoading: isLoadingActivities } = useQuery({
+    const {
+        data: activities,
+        error: activitiesError,
+        isLoading: isLoadingActivities } = useQuery({
         queryKey: ['companyActivities'],
         queryFn: fetchCompanyActivities,
     });
 
-    const { data: popularTopics, error: topicsError, isLoading: isLoadingTopics } = useQuery({
+    const {
+        data: popularTopics,
+        error: topicsError,
+        isLoading: isLoadingTopics } = useQuery({
         queryKey: ['popularTopics'],
         queryFn: fetchPopularTopics,
     });
