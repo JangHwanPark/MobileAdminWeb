@@ -1,9 +1,31 @@
 import React from 'react';
+import useFetchData from "../../hooks/useFetchData.ts";
 
 const User = () => {
+    const {
+        data: userCompanyByCount,
+        error: userCompanyByCountError,
+        isLoading: isLoadingUserCompanyByCount,
+    } = useFetchData(
+        ['companyActivities'],
+        '/api/v1/admin/post/NAVER/question/top/user',
+        "POST");
+
+    if (isLoadingUserCompanyByCount) return <div>Loading...</div>;
+    if (userCompanyByCountError) return <div>Error occurred</div>;
+
     return (
         <div>
-            
+            {/* Navigation */}
+            <div>
+                <div>
+                    <input type="text"/>
+                    <button>submit</button>
+                </div>
+            </div>
+
+            {/* Contents */}
+            <pre>{JSON.stringify(userCompanyByCount, null, 2)}</pre>
         </div>
     );
 };

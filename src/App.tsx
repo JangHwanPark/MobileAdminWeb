@@ -5,10 +5,12 @@ import {Outlet} from "react-router-dom";
 function App() {
 
     return (
-        <>
+        <div className="h-screen flex">
             <Navbar/>
-            <Outlet/>
-        </>
+            <div className="mx-10 my-20 w-full">
+                <Outlet/>
+            </div>
+        </div>
     )
 }
 

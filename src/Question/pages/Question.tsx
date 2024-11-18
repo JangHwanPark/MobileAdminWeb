@@ -1,45 +1,36 @@
 import React from 'react';
-import {useQuery} from "@tanstack/react-query";
 import QuestionCount from "../components/QuestionCount.tsx";
 import CommentCount from "../components/CommentCount.tsx";
-import api from "../../api/axios.ts";
+import useFetchData from "../../hooks/useFetchData.ts";
 
-const fetchQuestionCount = async () => {
-    const response = await api.post('/api/v1/admin/post/question/count', {}); // 요청 바디를 추가할 경우 객체 삽입
-    return response.data;
-};
-
-const fetchCommentCount = async () => {
-    const response = await api.post('/api/v1/admin/post/comment/count', {}); // 요청 바디를 추가할 경우 객체 삽입
-    return response.data;
-};
+type QuestionData = { question: string; count: number }[];
 
 const Question = () => {
     const {
         data: questionCount,
         error: questionError,
-        isLoading: isLoadingQuestionCount
-    } = useQuery({
-        queryKey: ['questionCount'],
-        queryFn: fetchQuestionCount,
-    });
+        isLoading: isLoadingQuestionCount,
+    } = useFetchData<QuestionData>(
+        ['questionCount'],
+        '/api/v1/admin/post/question/count',
+        'POST');
 
     const {
         data: commentCount,
         error: commentError,
-        isLoading: isLoadingCommentCount
-    } = useQuery({
-        queryKey: ['commentCount'],
-        queryFn: fetchCommentCount,
-    });
+        isLoading: isLoadingCommentCount,
+    } = useFetchData(
+        ['commentCount'],
+        '/api/v1/admin/post/comment/count',
+        'POST');
 
-    console.log(questionCount);
-    console.log(commentCount);
+    if (isLoadingQuestionCount || isLoadingCommentCount) return <div>Loading...</div>;
+    if (questionError || commentError) return <div>Error occurred</div>;
 
     return (
         <div>
-            <QuestionCount questionCount={questionCount} />
-            <CommentCount commentCount={commentCount} />
+            <QuestionCount questionCount={questionCount || []} />
+            <CommentCount commentCount={commentCount || []} />
         </div>
     );
 };
