@@ -2,6 +2,7 @@ import React from 'react';
 import CompanyActivities from "../components/CompanyActivities.tsx";
 import PopularTopics from "../components/PopularTopics.tsx";
 import useFetchData from "../../hooks/useFetchData.ts";
+import {ClockLoader, FadeLoader} from "react-spinners";
 
 const CompanyPage = () => {
     const {
@@ -22,7 +23,7 @@ const CompanyPage = () => {
         '/api/v1/admin/get/popular/topics',
         "GET");
 
-    if (isLoadingActivities || isLoadingTopics) return <div>Loading...</div>;
+    if (isLoadingActivities || isLoadingTopics) return <ClockLoader/>;
     if (activitiesError || topicsError) return <div>Error occurred</div>;
 
     return (

@@ -2,6 +2,7 @@ import React from 'react';
 import QuestionCount from "../components/QuestionCount.tsx";
 import CommentCount from "../components/CommentCount.tsx";
 import useFetchData from "../../hooks/useFetchData.ts";
+import {ClockLoader} from "react-spinners";
 
 type QuestionData = { question: string; count: number }[];
 
@@ -24,7 +25,7 @@ const Question = () => {
         '/api/v1/admin/post/comment/count',
         'POST');
 
-    if (isLoadingQuestionCount || isLoadingCommentCount) return <div>Loading...</div>;
+    if (isLoadingQuestionCount || isLoadingCommentCount) return <ClockLoader/>;
     if (questionError || commentError) return <div>Error occurred</div>;
 
     return (

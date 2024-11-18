@@ -1,5 +1,6 @@
 import React from 'react';
 import useFetchData from "../../hooks/useFetchData.ts";
+import {ClockLoader} from "react-spinners";
 
 const User = () => {
     const {
@@ -11,7 +12,7 @@ const User = () => {
         '/api/v1/admin/post/NAVER/question/top/user',
         "POST");
 
-    if (isLoadingUserCompanyByCount) return <div>Loading...</div>;
+    if (isLoadingUserCompanyByCount) return <ClockLoader/>;
     if (userCompanyByCountError) return <div>Error occurred</div>;
 
     return (
