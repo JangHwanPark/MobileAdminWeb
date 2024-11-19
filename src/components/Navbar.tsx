@@ -1,10 +1,9 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     return (
-        <nav className="m-7">
-            <ul className="flex flex-col">
+        <nav className="p-10 border border-gray-200">
+            <ul className="flex flex-col gap-2">
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/user">User</Link></li>
                 <li><Link to="/company">Company</Link></li>

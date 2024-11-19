@@ -1,34 +1,22 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import useFetchData from "../../hooks/useFetchData.ts";
 import {ClockLoader} from "react-spinners";
+import UserSearchForm from "../components/UserSearchForm.tsx";
+
+type UserCompanyData = {
+    company: string;
+    question_cnt: number;
+}[];
 
 const User = () => {
     const [inputValue, setInputValue] = useState(""); // 입력값 상태 관리
     const [dynamicUrl, setDynamicUrl] = useState<string | null>(null); // 동적 URL 상태 관리
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    }
-
-    const handleSubmit = (e: React.FormEvent) => {
-        console.log(inputValue)
-        e.preventDefault(); // 기본 폼 동작 방지
-
-        if (!inputValue.trim()) {
-            alert("값을 입력하세요.");
-            return;
-        }
-
-        // 동적 URL 업데이트
-        setDynamicUrl(`/api/v1/admin/post/${inputValue}/question/top/user`);
-        console.log(dynamicUrl);
-    }
-
     const {
         data: userCompanyByCount,
         error: userCompanyByCountError,
         isLoading: isLoadingUserCompanyByCount,
-    } = useFetchData(
+    } = useFetchData<UserCompanyData>(
         ['companyActivities', dynamicUrl],
         dynamicUrl || '/api/v1/admin/post/NAVER/question/top/user',
         "POST");
@@ -39,15 +27,26 @@ const User = () => {
     return (
         <div>
             {/* Navigation */}
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <input type="text" onChange={handleInputChange}/>
-                    <button>submit</button>
-                </form>
-            </div>
+            <nav>
+                <ul>
+                    <li>사용자별 활동 통계</li>
+                </ul>
+            </nav>
+
+            <UserSearchForm
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+                setDynamicUrl={setDynamicUrl}
+                urlTemplate="/api/v1/admin/post/{input}/question/top/user"
+            />
 
             {/* Contents */}
-            <pre>{JSON.stringify(userCompanyByCount, null, 2)}</pre>
+            {userCompanyByCount.map((item, index) => (
+                <div key={index}>
+                    <div>{item.company}</div>
+                    <div>{item.question_cnt}</div>
+                </div>
+            ))}
         </div>
     );
 };
