@@ -15,6 +15,19 @@ import {
 } from "recharts";
 import UserSearchForm from "../../User/components/UserSearchForm.tsx";
 
+interface Activity {
+    company: string;
+    question_cnt: number;
+    comment_cnt: number;
+}
+
+interface CompanyYearData {
+    year: number;
+    comment_count: number;
+    question_count: number;  // Include any other fields that are returned
+}
+
+
 const CompanyPage = () => {
     const [inputValue, setInputValue] = useState(""); // 입력값 상태 관리
     const [selectValue, setSelectValue] = useState("");
@@ -28,7 +41,7 @@ const CompanyPage = () => {
         data: activities,
         error: activitiesError,
         isLoading: isLoadingActivities,
-    } = useFetchData(
+    } = useFetchData<Activity[]>(
         ['companyActivities'],
         '/api/v1/admin/get/activity/company',
         "GET");
@@ -37,7 +50,7 @@ const CompanyPage = () => {
         data: companyYear,
         error: companyYearError,
         isLoading: isLoadingCompanyYear
-    } = useFetchData(
+    } = useFetchData<CompanyYearData[]>(
         ['companyYear'],
         `/api/v1/admin/post/company/${selectValue || "NEXON"}`,
         "POST");
