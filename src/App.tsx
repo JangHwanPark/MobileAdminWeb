@@ -7,7 +7,7 @@ function App() {
     return (
         <div className="h-screen flex">
             <Navbar/>
-            <div className="mx-10 my-20 w-full">
+            <div className="mx-10 my-10 w-full">
                 <Outlet/>
             </div>
         </div>

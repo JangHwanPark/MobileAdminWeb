@@ -47,6 +47,15 @@ const CompanyPage = () => {
         "GET");
 
     const {
+        data: companyData,
+        error: companyDataError,
+        isLoading: isLoadingCompanyData,
+    } = useFetchData<Activity[]>(
+        ['companyActivities'],
+        '/api/v1/admin/post/company/question/top',
+        "GET");
+
+    const {
         data: companyYear,
         error: companyYearError,
         isLoading: isLoadingCompanyYear
@@ -55,23 +64,57 @@ const CompanyPage = () => {
         `/api/v1/admin/post/company/${selectValue || "NEXON"}`,
         "POST");
 
-    if (isLoadingActivities || isLoadingCompanyYear) return <ClockLoader/>;
-    if (activitiesError || companyYearError) return <div>Error occurred</div>;
-    console.log("activities")
-    console.log(companyYear)
+    if (isLoadingActivities || isLoadingCompanyYear || isLoadingCompanyData) return <ClockLoader/>;
+    if (activitiesError || companyYearError || companyDataError) return <div>Error occurred</div>;
+    console.log(companyData)
+
     return (
         <div>
-            <header className="mx-10 mb-10">
-                <UserSearchForm
-                    inputValue={inputValue}
-                    setInputValue={setInputValue}
-                    setDynamicUrl={setDynamicUrl}
-                    urlTemplate="/api/v1/admin/post/company/{input}"
-                />
+            <div className="w-full mx-auto flex flex-col p-5">
+                <div>
+                    <p className="text-2xl font-bold mb-4">Top 10 Company</p>
 
-                <div className="flex">
-                    <p className="mx-5">회사선택</p>
-                    <select onChange={handleSelectByKeyword}>
+                    {/* 헤더 부분 */}
+                    <div className="grid grid-cols-4 gap-4 mb-2 text-sm font-semibold text-gray-700">
+                        <span>회사명</span>
+                        <span>질문 개수</span>
+                        <span>코멘트 개수</span>
+                        <span>총합</span>
+                    </div>
+
+                    {/* 회사 리스트 부분 */}
+                    {companyData.map(item => (
+                        <div
+                            key={item.company}
+                            className="grid grid-cols-4 gap-4 py-2 px-4 border-b border-gray-300 text-sm text-gray-800 hover:bg-gray-50"
+                        >
+                            <span>{item.company}</span>
+                            <span>{item.question_cnt}</span>
+                            <span>{item.comment_cnt}</span>
+                            <span>{item.total_activity_count}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <header className="mb-10 p-5 bg-white rounded-lg shadow-md">
+                {/* 검색 폼 영역 */}
+                <div className="flex flex-col mb-6">
+                    <UserSearchForm
+                        inputValue={inputValue}
+                        setInputValue={setInputValue}
+                        setDynamicUrl={setDynamicUrl}
+                        urlTemplate="/api/v1/admin/post/company/{input}"
+                    />
+                </div>
+
+                {/* 회사선택 드롭다운 영역 */}
+                <div className="flex items-center space-x-4">
+                    <p className="font-semibold text-lg text-gray-700">회사 선택</p>
+                    <select
+                        onChange={handleSelectByKeyword}
+                        className="py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
                         {activities.map(item => (
                             <option key={item.company} value={item.company}>
                                 {item.company}
@@ -81,9 +124,10 @@ const CompanyPage = () => {
                 </div>
             </header>
 
+
             <h2>소속 회사별 활동 현황</h2>
             <BarChart
-                width={3000}
+                width={1200}
                 height={400}
                 data={activities}
                 margin={{top: 20, right: 30, left: 20, bottom: 5}}
@@ -97,7 +141,7 @@ const CompanyPage = () => {
             </BarChart>
 
             <BarChart
-                width={2400}
+                width={1200}
                 height={400}
                 data={activities}
                 margin={{top: 20, right: 30, left: 20, bottom: 5}}
