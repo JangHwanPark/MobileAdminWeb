@@ -5,6 +5,7 @@ import { ClockLoader } from "react-spinners";
 type UserActivityStats = {
     company: string;
     question_cnt: number;
+    comment_cnt: number;
 }[];
 
 const User = () => {
@@ -26,7 +27,7 @@ const User = () => {
 
     // 사용자별 활동 통계 요청
     const {
-        data: userActivityStats,
+        data: userActivityStats = [], // 초기값을 빈 배열로 설정
         error: userActivityStatsError,
         isLoading: isLoadingUserActivityStats
     } = useFetchData<UserActivityStats>(
@@ -56,21 +57,29 @@ const User = () => {
             <div className="w-[300px] mb-10">
                 <h2>사용자 리스트</h2>
                 <ul className="h-screen overflow-y-auto">
-                    {userActivityStats.map((item, index) => (
-                        <li key={index}>
-                            <span>{item.name}</span>
-                            <span className="ml-10">{item.company}</span>
-                        </li>
-                    ))}
+                    {/* 데이터가 없을 경우 대체 콘텐츠 */}
+                    {userActivityStats.length === 0 ? (
+                        <div>No data available</div>
+                    ) : (
+                        userActivityStats.map((item, index) => (
+                            <li key={index}>
+                                <span>{item.name}</span>
+                                <span className="ml-10">{item.company}</span>
+                            </li>
+                        ))
+                    )}
                 </ul>
             </div>
 
-            <div className="w-full flex flex-col gap-5">
+            <div className="w-full flex flex-col gap-2">
                 {/* 사용자별 활동 통계 */}
-                <div className="w-full ">
+                <div className="w-full">
                     {/* 사용자별 활동 통계 */}
-                    <form onSubmit={handleSearchSubmit}>
-                        <select onChange={handleTimeFrameChange} value={selectedTimeFrame}>
+                    <form className="mb-3" onSubmit={handleSearchSubmit}>
+                        <select
+                            className="mr-3"
+                            onChange={handleTimeFrameChange}
+                            value={selectedTimeFrame}>
                             <option value="daily">일별</option>
                             <option value="weekly">주간</option>
                             <option value="monthly">월별</option>
@@ -82,19 +91,23 @@ const User = () => {
                     {/* 사용자 활동 통계 */}
                     <div className="h-[300px] overflow-y-auto">
                         <h3>User Activity Stats</h3>
-                        {userActivityStats && userActivityStats.map((item, index) => (
-                            <div key={index}>
-                                <div>
-                                    <span>Company: {item.company}</span>
-                                    <span>Question Count: {item.question_cnt}</span>
+                        {userActivityStats.length === 0 ? (
+                            <div>No data available</div>
+                        ) : (
+                            userActivityStats.map((item, index) => (
+                                <div key={index}>
+                                    <div>
+                                        <span>Company: {item.company}</span>
+                                        <span>Question Count: {item.question_cnt}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        )}
                     </div>
                 </div>
 
                 {/* 사용자가 작성한 코멘트 or 질문의 개수 */}
-                <div className="mt-10">
+                <div className="mt-5">
                     <h3>사용자가 작성한 질문 또는 코멘트 개수</h3>
                     <div className="h-[300px] overflow-y-auto overflow-x-auto">
                         <table className="min-w-full border-collapse border border-gray-300">
