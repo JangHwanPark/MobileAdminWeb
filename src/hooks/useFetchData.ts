@@ -1,11 +1,11 @@
 import api from "../api/axios.ts";
 import {QueryKey, useQuery, UseQueryOptions} from "@tanstack/react-query";
 
-export const useFetchData = <TData = unknown, TError = Error>(
+export const useFetchData = <TData = unknown, TError = Error, TBody = unknown>(
     key: QueryKey, // queryKey의 타입
     endpoint: string,
     method: 'GET' | 'POST' = 'GET',
-    body?: Record<string, never>,
+    body?: TBody,
     options?: UseQueryOptions<TData, TError>
 ) => {
     const fetchFn = async () => {

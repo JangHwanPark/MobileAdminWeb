@@ -38,8 +38,7 @@ const User = () => {
         {
             enabled: shouldFetchData, // shouldFetchData가 true일 때만 요청
             onSuccess: () => setShouldFetchData(false), // 성공적으로 데이터를 받아오면 트리거 리셋
-        }
-    );
+        });
 
     // 트리거 상태에 따른 데이터 요청
     useEffect(() => {

@@ -33,7 +33,7 @@ const UserSearchForm: React.FC<UserSearchFormProps> = ({inputValue, setInputValu
                     type="text"
                     onChange={handleInputChange}
                     placeholder="검색어를 입력하세요"/>
-                <button>검색</button>
+                <button className="ml-5">검색</button>
             </form>
         </div>
     );
