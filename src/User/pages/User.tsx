@@ -1,25 +1,27 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import useFetchData from "../../hooks/useFetchData.ts";
-import {ClockLoader} from "react-spinners";
-import UserSearchForm from "../components/UserSearchForm.tsx";
+import { ClockLoader } from "react-spinners";
 
-type UserCompanyData = {
+type UserActivityStats = {
     company: string;
     question_cnt: number;
 }[];
 
 const User = () => {
-    const [inputValue, setInputValue] = useState(""); // 입력값 상태 관리
-    const [selectedPeriod, setSelectedPeriod] = useState("daily");
-    const [triggerFetch, setTriggerFetch] = useState(false); // 버튼 클릭 시 데이터 요청 트리거 상태
+    // 시간 범위 상태
+    const [selectedTimeFrame, setSelectedTimeFrame] = useState("daily");
+    // 데이터 요청 트리거 상태
+    const [shouldFetchData, setShouldFetchData] = useState(false);
 
-    const handlePeriodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedPeriod(e.target.value); // 기간 선택 시 상태 업데이트
-    }
+    // 시간 범위 선택 시 상태 업데이트
+    const handleTimeFrameChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedTimeFrame(e.target.value);
+    };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // 검색 버튼 클릭 시 데이터 요청 트리거
+    const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // 기본 폼 동작 방지
-        setTriggerFetch(true); // 서밋 버튼 클릭 시 데이터 요청 트리거
+        setShouldFetchData(true); // 데이터 요청 트리거
     };
 
     // 사용자별 활동 통계 요청
@@ -27,23 +29,25 @@ const User = () => {
         data: userActivityStats,
         error: userActivityStatsError,
         isLoading: isLoadingUserActivityStats
-    } = useFetchData(
-        ['userActivityStats', selectedPeriod], // 상태값을 dependency로 설정하여 변경 시 자동으로 요청
+    } = useFetchData<UserActivityStats>(
+        ['userActivityStats', selectedTimeFrame], // 시간 범위 상태가 변경되면 데이터 요청
         '/api/v1/admin/post/activity/user/stats', // 해당 API 호출
         "POST",
-        { stats: selectedPeriod }, // body로 선택된 기간값 보내기
-        {enabled: triggerFetch, // triggerFetch가 true일 때만 요청
-            onSuccess: () => setTriggerFetch(false), // 성공적으로 데이터를 받아오면 triggerFetch 리셋
-        });
-
-    useEffect(() => {
-        // triggerFetch가 true로 변경되면 데이터 요청을 리셋하여 다시 요청
-        if (triggerFetch && selectedPeriod) {
-            setTriggerFetch(false); // 요청 후 triggerFetch 리셋
+        { stats: selectedTimeFrame }, // body로 선택된 시간 범위 값 보내기
+        {
+            enabled: shouldFetchData, // shouldFetchData가 true일 때만 요청
+            onSuccess: () => setShouldFetchData(false), // 성공적으로 데이터를 받아오면 트리거 리셋
         }
-    }, [triggerFetch]);
+    );
 
-    if (isLoadingUserActivityStats) return <ClockLoader/>;
+    // 트리거 상태에 따른 데이터 요청
+    useEffect(() => {
+        if (shouldFetchData && selectedTimeFrame) {
+            setShouldFetchData(false); // 요청 후 리셋
+        }
+    }, [shouldFetchData]);
+
+    if (isLoadingUserActivityStats) return <ClockLoader />;
     if (userActivityStatsError) return <div>Error occurred</div>;
 
     return (
@@ -55,8 +59,8 @@ const User = () => {
 
             <div className="w-full ">
                 {/* 사용자별 활동 통계 */}
-                <form onSubmit={handleSubmit}>
-                    <select onChange={handlePeriodChange} value={selectedPeriod}>
+                <form onSubmit={handleSearchSubmit}>
+                    <select onChange={handleTimeFrameChange} value={selectedTimeFrame}>
                         <option value="daily">일별</option>
                         <option value="weekly">주간</option>
                         <option value="monthly">월별</option>
@@ -65,7 +69,7 @@ const User = () => {
                     <button>검색</button>
                 </form>
 
-                {/* User activity stats */}
+                {/* 사용자 활동 통계 */}
                 <div className="h-[300px] overflow-y-auto">
                     <h3>User Activity Stats</h3>
                     {userActivityStats && userActivityStats.map((item, index) => (
