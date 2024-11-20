@@ -51,35 +51,71 @@ const User = () => {
     if (userActivityStatsError) return <div>Error occurred</div>;
 
     return (
-        <div className="flex gap-2.5">
+        <div className="flex gap-10">
             {/* 사용자 리스트 */}
-            <div className="w-[300px]">
+            <div className="w-[300px] mb-10">
                 <h2>사용자 리스트</h2>
+                <ul className="h-screen overflow-y-auto">
+                    {userActivityStats.map((item, index) => (
+                        <li key={index}>
+                            <span>{item.name}</span>
+                            <span className="ml-10">{item.company}</span>
+                        </li>
+                    ))}
+                </ul>
             </div>
 
-            <div className="w-full ">
+            <div className="w-full flex flex-col gap-5">
                 {/* 사용자별 활동 통계 */}
-                <form onSubmit={handleSearchSubmit}>
-                    <select onChange={handleTimeFrameChange} value={selectedTimeFrame}>
-                        <option value="daily">일별</option>
-                        <option value="weekly">주간</option>
-                        <option value="monthly">월별</option>
-                        <option value="yearly">년별</option>
-                    </select>
-                    <button>검색</button>
-                </form>
+                <div className="w-full ">
+                    {/* 사용자별 활동 통계 */}
+                    <form onSubmit={handleSearchSubmit}>
+                        <select onChange={handleTimeFrameChange} value={selectedTimeFrame}>
+                            <option value="daily">일별</option>
+                            <option value="weekly">주간</option>
+                            <option value="monthly">월별</option>
+                            <option value="yearly">년별</option>
+                        </select>
+                        <button>검색</button>
+                    </form>
 
-                {/* 사용자 활동 통계 */}
-                <div className="h-[300px] overflow-y-auto">
-                    <h3>User Activity Stats</h3>
-                    {userActivityStats && userActivityStats.map((item, index) => (
-                        <div key={index}>
-                            <div>
-                                <span>Company: {item.company}</span>
-                                <span>Question Count: {item.question_cnt}</span>
+                    {/* 사용자 활동 통계 */}
+                    <div className="h-[300px] overflow-y-auto">
+                        <h3>User Activity Stats</h3>
+                        {userActivityStats && userActivityStats.map((item, index) => (
+                            <div key={index}>
+                                <div>
+                                    <span>Company: {item.company}</span>
+                                    <span>Question Count: {item.question_cnt}</span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                </div>
+
+                {/* 사용자가 작성한 코멘트 or 질문의 개수 */}
+                <div className="mt-10">
+                    <h3>사용자가 작성한 질문 또는 코멘트 개수</h3>
+                    <div className="h-[300px] overflow-y-auto overflow-x-auto">
+                        <table className="min-w-full border-collapse border border-gray-300">
+                            <thead>
+                            <tr className="bg-gray-200">
+                                <th className="p-2 text-left">Company</th>
+                                <th className="p-2 text-left">Question Count</th>
+                                <th className="p-2 text-left">Comment Count</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {userActivityStats && userActivityStats.map((item, index) => (
+                                <tr key={index} className="border-b">
+                                    <td className="p-2">{item.company}</td>
+                                    <td className="p-2">{item.question_cnt}</td>
+                                    <td className="p-2">{item.comment_cnt}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
