@@ -4,9 +4,9 @@ type selectComponentType = {
     array: Array<string | number>
 }
 
-const SelectComponent: React.FC<selectComponentType> = ({name, id, array}) => {
+const SelectComponent: React.FC<selectComponentType> = ({className, name, id, array}) => {
     return (
-        <select name={name} id={id}>
+        <select className={className} name={name} id={id}>
             {array.map((item, i) => (
                 <option key={i} value={item}>{item}</option>
             ))}
