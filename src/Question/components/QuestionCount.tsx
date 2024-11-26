@@ -1,5 +1,3 @@
-import React from 'react';
-
 const QuestionCount = ({questionCount = []}) => {
     console.log(questionCount)
     return (

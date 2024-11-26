@@ -26,7 +26,7 @@ const Topic = () => {
     }));
 
     return (
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height="100%">
             <Treemap
                 data={treemapData}
                 dataKey="size"
@@ -34,7 +34,7 @@ const Topic = () => {
                 stroke="#fff"
                 fill="#8884d8"
                 width={400}
-                height={500}
+                height={800}
             />
         </ResponsiveContainer>
     );

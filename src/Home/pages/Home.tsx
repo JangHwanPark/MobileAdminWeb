@@ -3,11 +3,18 @@ import useFetchData from "../../hooks/useFetchData.ts";
 import { ClockLoader } from "react-spinners";
 import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
 import DashboardNavigation from "../components/DashboardNavigation.tsx";
+import DataCard from "../components/DataCard.tsx";
 
 type PopularTopicData = {
     topic: string;
     question_count: number;
 };
+
+type GetAllData = {
+    total_question_count: number;
+    total_comment_count: number;
+    total_user_count: number;
+}
 
 const Dashboard = () => {
     const [selectedView, setSelectedView] = useState<string>("recentTopics");
@@ -24,21 +31,35 @@ const Dashboard = () => {
     } = useFetchData<PopularTopicData[]>(['popularTopics'], '/api/v1/admin/get/popular/topics', "GET");
 
     // 전체 질문 및 댓글 수 API 호출
-    /*const {
-        data: totalQuestionCount,
-        isLoading: isLoadingTotalQuestionCount,
-    } = useFetchData<number[]>(['totalQuestionCount'], '/api/v1/admin/get/total/questions', 'GET');
-
     const {
-        data: totalCommentCount,
-        isLoading: isLoadingTotalCommentCount,
-    } = useFetchData<number[]>(['totalCommentCount'], '/api/v1/admin/get/total/comments', 'GET');*/
+        data: totalUserCommentQuestion,
+        error: totalUserCommentQuestionError,
+        isLoading: isLoadingTotalUserCommentQuestion,
+    } = useFetchData<GetAllData[]>(['totalUserCommentQuestion'], '/api/v1/admin/get/all/data', 'GET');
 
-    if (isLoadingTopics) return <ClockLoader />;
-    if (topicsError) return <div>Error occurred</div>;
+    if (isLoadingTopics || isLoadingTotalUserCommentQuestion) return <ClockLoader />;
+    if (topicsError || totalUserCommentQuestionError) return <div>Error occurred</div>;
+    console.log(totalUserCommentQuestion)
 
     return (
-        <div className="h-full">
+        <div className="grid">
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+                {/* 전체 사용자 */}
+                <DataCard
+                    title="전체 사용자"
+                    props={totalUserCommentQuestion[0].total_user_count}/>
+
+                {/* 전체 게시글 */}
+                <DataCard
+                    title="전체 질문"
+                    props={totalUserCommentQuestion[0].total_question_count}/>
+
+                {/* 전체 코멘트 */}
+                <DataCard
+                    title="전체 코멘트"
+                    props={totalUserCommentQuestion[0].total_comment_count}/>
+            </div>
             <DashboardNavigation onClick={handleSelectNavMenu}/>
 
             {/* Content: 조건부 렌더링 */}
