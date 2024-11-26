@@ -8,6 +8,9 @@ const Navbar = () => {
                     <Link to="/">대시보드</Link>
                 </li>
                 <li className="hover:bg-gray-100 p-2 rounded">
+                    <Link to="/topic">주제별 활동</Link>
+                </li>
+                <li className="hover:bg-gray-100 p-2 rounded">
                     <Link to="/user">사용자 통계</Link>
                 </li>
                 <li className="hover:bg-gray-100 p-2 rounded">

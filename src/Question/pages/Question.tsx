@@ -66,15 +66,13 @@ const Question = () => {
         if (shouldFetchData) setShouldFetchData(false); // 트리거 해제
     }, [shouldFetchData]);
 
-    console.log(selectedData)
-    console.log(monthlyPostCount)
     if (isLoadingPeriodQuestionCount || isLoadingUserActivityStats || isLoadingMonthlyPostCount) return <ClockLoader/>;
     if (periodQuestionCountError || userActivityStatsError || monthlyPostCountError) return <div>Error occurred</div>;
 
     return (
         <div>
             {/* 오늘, 주간, 월간, 년간 등록된 게시글 */}
-            <div className="space-y-4">
+            <div className="space-y-4 mb-10">
                 <div className="flex gap-4 overflow-x-auto">
                     {periodQuestionCount.map((item, index) => (
                         <div key={index} className="flex-shrink-0 w-[220px] bg-gray-100 p-4 rounded-lg shadow-md hover:bg-gray-200 transition">

@@ -54,29 +54,29 @@ const User = () => {
         <div className="flex gap-10">
             {/* 사용자 리스트 */}
             <div className="w-[300px] mb-10">
-                <h2>사용자 리스트</h2>
-                <ul className="h-screen overflow-y-auto">
+                <h2 className="text-lg font-semibold mb-3">사용자 리스트</h2>
+                <ul className="h-screen overflow-y-auto bg-white shadow-lg p-4 rounded-md">
                     {/* 데이터가 없을 경우 대체 콘텐츠 */}
                     {userActivityStats.length === 0 ? (
                         <div>No data available</div>
                     ) : (
                         userActivityStats.map((item, index) => (
-                            <li key={index}>
-                                <span>{item.name}</span>
-                                <span className="ml-10">{item.company}</span>
+                            <li key={index} className="border-b p-2 flex justify-between items-center">
+                                <span className="text-gray-800">{item.company}</span>
+                                <span className="text-gray-600">{item.question_cnt} 질문</span>
                             </li>
                         ))
                     )}
                 </ul>
             </div>
 
-            <div className="w-full flex flex-col gap-2">
+            <div className="w-full flex flex-col gap-4">
                 {/* 사용자별 활동 통계 */}
                 <div className="w-full">
-                    {/* 사용자별 활동 통계 */}
-                    <form className="mb-3" onSubmit={handleSearchSubmit}>
+                    {/* 사용자별 활동 통계 검색 폼 */}
+                    <form className="mb-4 flex items-center gap-4" onSubmit={handleSearchSubmit}>
                         <select
-                            className="mr-3"
+                            className="border px-4 py-2 rounded-md"
                             onChange={handleTimeFrameChange}
                             value={selectedTimeFrame}>
                             <option value="daily">일별</option>
@@ -84,41 +84,45 @@ const User = () => {
                             <option value="monthly">월별</option>
                             <option value="yearly">년별</option>
                         </select>
-                        <button>검색</button>
+                        <button
+                            className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                            type="submit"
+                            disabled={isLoadingUserActivityStats}>
+                            {isLoadingUserActivityStats ? '검색 중...' : '검색'}
+                        </button>
                     </form>
 
                     {/* 사용자 활동 통계 */}
-                    <div className="h-[300px] overflow-y-auto">
-                        <h3>User Activity Stats</h3>
+                    <div className="h-[300px] overflow-y-auto p-4 bg-white rounded-md shadow-md">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-4">사용자 활동 통계</h3>
                         {userActivityStats.length === 0 ? (
                             <div>No data available</div>
                         ) : (
                             userActivityStats.map((item, index) => (
-                                <div key={index}>
-                                    <div>
-                                        <span>Company: {item.company}</span>
-                                        <span>Question Count: {item.question_cnt}</span>
-                                    </div>
+                                <div key={index} className="flex justify-between items-center border-b py-2">
+                                    <div className="text-gray-800">{item.company}</div>
+                                    <div className="text-gray-600">질문: {item.question_cnt}</div>
+                                    <div className="text-gray-600">코멘트: {item.comment_cnt}</div>
                                 </div>
                             ))
                         )}
                     </div>
                 </div>
 
-                {/* 사용자가 작성한 코멘트 or 질문의 개수 */}
+                {/* 사용자가 작성한 코멘트 또는 질문의 개수 */}
                 <div className="mt-5">
-                    <h3>사용자가 작성한 질문 또는 코멘트 개수</h3>
-                    <div className="h-[300px] overflow-y-auto overflow-x-auto">
+                    <h3 className="text-xl font-semibold mb-4">사용자가 작성한 질문 또는 코멘트 개수</h3>
+                    <div className="overflow-y-auto overflow-x-auto">
                         <table className="min-w-full border-collapse border border-gray-300">
-                            <thead>
-                            <tr className="bg-gray-200">
+                            <thead className="bg-gray-200">
+                            <tr>
                                 <th className="p-2 text-left">Company</th>
                                 <th className="p-2 text-left">Question Count</th>
                                 <th className="p-2 text-left">Comment Count</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {userActivityStats && userActivityStats.map((item, index) => (
+                            {userActivityStats.map((item, index) => (
                                 <tr key={index} className="border-b">
                                     <td className="p-2">{item.company}</td>
                                     <td className="p-2">{item.question_cnt}</td>
