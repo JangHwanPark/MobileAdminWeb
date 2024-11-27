@@ -10,7 +10,6 @@ import Home from "./Home/pages/Home.tsx";
 import Company from "./Company/pages/Company.tsx";
 import User from "./User/pages/User.tsx";
 import Question from "./Question/pages/Question.tsx";
-import Topic from "./Topic/pages/Topic.tsx";
 
 // React Router Dom 설정
 const routes: RouteObject[] = [
@@ -20,7 +19,6 @@ const routes: RouteObject[] = [
         children: [
             {index: true, element: <Home />},
             {path: '/user', element: <User />},
-            {path: '/topic', element: <Topic />},
             {path: '/company', element: <Company />},
             {path: '/question', element: <Question />},
         ],

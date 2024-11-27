@@ -60,13 +60,8 @@ const Question = () => {
         ["monthlyPostCount", selectedData],
         `/api/v1/admin/post/${selectedData.year}/${selectedData.keyword}/count`,
         "POST",
-        { stats: selectedData.keyword },
-        { enabled: shouldFetchData }
+        { stats: selectedData.keyword }
     );
-
-    useEffect(() => {
-        if (shouldFetchData) setShouldFetchData(false);
-    }, [shouldFetchData]);
 
     if (isLoadingPeriodQuestionCount || isLoadingUserActivityStats || isLoadingMonthlyPostCount)
         return <ClockLoader />;
@@ -129,7 +124,7 @@ const Question = () => {
             {/* 월별 질문 등록 횟수 */}
             <div className="mt-5">
                 <LineChart
-                    width={1200}
+                    width={1100}
                     height={400}
                     data={monthlyPostCount}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
@@ -147,7 +142,7 @@ const Question = () => {
             <div className="mt-10">
                 <p className="p-6 text-xl font-semibold text-gray-800">년별 질문 등록 횟수 조회</p>
                 <LineChart
-                    width={1200}
+                    width={1100}
                     height={400}
                     data={userActivityStats}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}

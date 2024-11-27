@@ -56,33 +56,31 @@ const Dashboard = () => {
                     icon={<FaRegCommentDots/>}/>
             </div>
 
-            <div className="flex flex-col gap-10 p-5 bg-gray-100 rounded-lg shadow-md">
+            <div className="mt-5 grid grid-cols-1 lg:grid-cols-5 gap-4">
                 {/* Chart Section */}
-                <div className="flex flex-col lg:flex-row gap-5">
-                    <div className="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow-lg">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">최근 인기있는 주제</h2>
-                        <BarChart width={600} height={400} data={popularTopics}
-                                  margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-                            <CartesianGrid strokeDasharray="3 3"/>
-                            <XAxis dataKey="topic" interval={0} angle={-45} textAnchor="end"/>
-                            <YAxis/>
-                            <Tooltip/>
-                            <Legend/>
-                            <Bar dataKey="question_count" fill="#82ca9d"/>
-                        </BarChart>
-                    </div>
+                <div className="lg:col-span-3 space-y-4">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">최근 인기있는 주제</h2>
+                    <BarChart width={600} height={400} data={popularTopics}
+                              margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="topic" interval={0} angle={-45} textAnchor="end"/>
+                        <YAxis/>
+                        <Tooltip/>
+                        <Legend/>
+                        <Bar dataKey="question_count" fill="#82ca9d"/>
+                    </BarChart>
+                </div>
 
-                    {/* Topics List Section */}
-                    <div className="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow-lg">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">주제 목록</h2>
-                        <div className="space-y-4">
-                            {popularTopics.map(item => (
-                                <div key={item.topic} className="flex justify-between items-center border-b py-2">
-                                    <span className="text-gray-700 font-medium">{item.topic}</span>
-                                    <span className="text-gray-600">{item.question_count} 질문</span>
-                                </div>
-                            ))}
-                        </div>
+                {/* Topics List Section */}
+                <div className="lg:col-span-2">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">주제 목록</h2>
+                    <div className="space-y-4">
+                        {popularTopics.map(item => (
+                            <div key={item.topic} className="flex justify-between items-center border-b py-2">
+                                <span className="text-gray-700 font-medium">{item.topic}</span>
+                                <span className="text-gray-600">{item.question_count} 질문</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
