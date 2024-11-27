@@ -160,9 +160,6 @@ const Question = () => {
                     <Line type="monotone" dataKey="question_count" stroke="#82ca9d" />
                 </LineChart>
             </div>
-
-            {/* 오늘, 주간, 월간, 년간 등록된 게시글 */}
-            <DatePostComponent props={periodQuestionCount} />
         </div>
     );
 };
