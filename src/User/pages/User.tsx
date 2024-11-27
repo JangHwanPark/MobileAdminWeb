@@ -3,12 +3,7 @@ import useFetchData from "../../hooks/useFetchData.ts";
 import {ClockLoader} from "react-spinners";
 import {IoIosRefresh} from "react-icons/io";
 import {Link} from "react-router-dom";
-
-type UserActivityStats = {
-    company: string;
-    question_cnt: number;
-    comment_cnt: number;
-}[];
+import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 
 type totalActivityUsers = {
     uid: number;
@@ -19,22 +14,6 @@ type totalActivityUsers = {
 }[];
 
 const User = () => {
-    // 시간 범위 상태
-    const [selectedTimeFrame, setSelectedTimeFrame] = useState("daily");
-    // 데이터 요청 트리거 상태
-    const [shouldFetchData, setShouldFetchData] = useState(false);
-
-    // 시간 범위 선택 시 상태 업데이트
-    const handleTimeFrameChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedTimeFrame(e.target.value);
-    };
-
-    // 검색 버튼 클릭 시 데이터 요청 트리거
-    const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault(); // 기본 폼 동작 방지
-        setShouldFetchData(true); // 데이터 요청 트리거
-    };
-
     const currentTime = new Date().toLocaleString("ko-kr", {
         year: "numeric",
         month: "short",
@@ -52,29 +31,26 @@ const User = () => {
         '/api/v1/admin/get/top/activity/users',
         'GET');
 
-
-    // 사용자별 활동 통계 요청
     const {
-        data: userActivityStats = [], // 초기값을 빈 배열로 설정
-        error: userActivityStatsError,
-        isLoading: isLoadingUserActivityStats
-    } = useFetchData<UserActivityStats>(
-        ['userActivityStats', selectedTimeFrame], // 시간 범위 상태가 변경되면 데이터 요청
-        '/api/v1/admin/post/activity/user/stats', // 해당 API 호출
-        "POST",
-        {stats: selectedTimeFrame}, // body로 선택된 시간 범위 값 보내기
-        );
+        data: monthlyData = [],
+        error: monthlyDataError,
+        isLoading: isLoadingMonthlyData,
+    } = useFetchData(
+        ['monthlyData'],
+        '/api/v1/admin/get/monthly/user/signup/count',
+        'GET');
 
-    // 트리거 상태에 따른 데이터 요청
-    useEffect(() => {
-        if (shouldFetchData && selectedTimeFrame) {
-            setShouldFetchData(false); // 요청 후 리셋
-        }
-    }, [shouldFetchData]);
+    const {
+        data: yearlyData = [],
+        error: yearlyDataError,
+        isLoading: isLoadingYearlyData,
+    } = useFetchData(
+        ['yearData'],
+        '/api/v1/admin/get/yearly/user/signup/count',
+        'GET');
 
-    console.log(userActivityStats)
-    if (isLoadingUserActivityStats || isLoadingTopActivityUsers) return <ClockLoader/>;
-    if (userActivityStatsError || topActivityUsersError) return <div>Error occurred</div>;
+    if (isLoadingTopActivityUsers || isLoadingYearlyData || isLoadingMonthlyData) return <ClockLoader/>;
+    if (topActivityUsersError || yearlyDataError || monthlyDataError) return <div>Error occurred</div>;
 
     return (
         /* container */
@@ -82,7 +58,7 @@ const User = () => {
             {/* 사용자 활동 순위 */}
             <div className="lg:col-span-2">
                 <div className="rounded-md shadow flex flex-col bg-white">
-                    <h3>사용자 활동 순위</h3>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">사용자 활동 순위</h2>
                     <ul className="flex flex-col overflow-y-auto divide-y">
                         {topActivityUsers.map((item, idx) => (
                             <li className="flex flex-col" key={idx}>
@@ -113,48 +89,27 @@ const User = () => {
                 </div>
             </div>
 
-            {/* 사용자별 활동 통계 */}
-            <div className="flex gap-10">
-                <div className="w-full flex flex-col gap-4">
-                    {/* 사용자별 활동 통계 */}
-                    <div className="w-full">
-                        {/* 사용자별 활동 통계 검색 폼 */}
-                        <form className="mb-4 flex items-center gap-4" onSubmit={handleSearchSubmit}>
-                            <select
-                                className="border px-4 py-2 rounded-md"
-                                onChange={handleTimeFrameChange}
-                                value={selectedTimeFrame}>
-                                <option value="daily">일별</option>
-                                <option value="weekly">주간</option>
-                                <option value="monthly">월별</option>
-                                <option value="yearly">년별</option>
-                            </select>
-                            <button
-                                className="bg-blue-500 text-white py-2 px-4 rounded-md"
-                                type="submit"
-                                disabled={isLoadingUserActivityStats}>
-                                {isLoadingUserActivityStats ? '검색 중...' : '검색'}
-                            </button>
-                        </form>
-
-                        {/* 사용자 활동 통계 */}
-                        <div className="h-[300px] overflow-y-auto p-4 bg-white rounded-md shadow-md">
-                            <h3 className="text-xl font-semibold text-gray-800 mb-4">사용자 활동 통계</h3>
-                            {userActivityStats.length === 0 ? (
-                                <div>No data available</div>
-                            ) : (
-                                userActivityStats.map((item, index) => (
-                                    <div key={index} className="flex justify-between items-center border-b py-2">
-                                        <div className="text-gray-800">{item.company}</div>
-                                        <div className="text-gray-600">질문: {item.question_cnt}</div>
-                                        <div className="text-gray-600">코멘트: {item.comment_cnt}</div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </div>
+            {/* 월별 */}
+            <div className="lg:col-span-3">
+                <div>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">년도별 사용자 생성 수</h2>
+                    <LineChart
+                        width={700}
+                        height={400}
+                        data={yearlyData}
+                        margin={{top: 20, right: 30, left: 20, bottom: 5}}
+                    >
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="year"/>
+                        <YAxis/>
+                        <Tooltip/>
+                        <Legend/>
+                        <Line type="monotone" dataKey="user_signup_count" stroke="#82ca9d"/>
+                    </LineChart>
                 </div>
             </div>
+
+            {/* 년별 */}
         </div>
     );
 };

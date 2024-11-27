@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SelectComponent from "../../components/SelectComponent.tsx";
 import useFetchData from "../../hooks/useFetchData.ts";
 import { ClockLoader } from "react-spinners";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import DatePostComponent from "../components/DatePostComponent.tsx";
 
 type periodQuestionCountType = {
     period: string;
@@ -33,7 +32,7 @@ const Question = () => {
     };
 
     const {
-        data: periodQuestionCount,
+        data: periodQuestionCount = [],
         error: periodQuestionCountError,
         isLoading: isLoadingPeriodQuestionCount,
     } = useFetchData<periodQuestionCountType[]>(
@@ -72,15 +71,13 @@ const Question = () => {
         <div className="container mx-auto p-6">
             {/* 오늘, 주간, 월간, 년간 등록된 게시글 */}
             <div className="space-y-4 mb-10">
-                <div className="flex gap-4 overflow-x-auto">
+                <div className="flex gap-4 justify-around overflow-x-auto">
                     {periodQuestionCount.map((item, index) => (
-                        <div
-                            key={index}
-                            className="flex-shrink-0 w-[220px] bg-gray-100 p-4 rounded-lg shadow-md hover:bg-gray-200 transition"
-                        >
+                        <div key={index} className="flex-shrink-0 w-[220px] bg-gray-100 p-4 rounded-lg shadow-md hover:bg-gray-200 transition">
                             <p className="text-lg font-semibold text-gray-800">{item.period}</p>
-                            <div className="flex items-center justify-between">
-                                <p className="text-2xl font-bold text-blue-600">{item.post_count} 개 작성</p>
+                            <div className="flex items-center justify-around">
+                                <span className="text-2xl font-bold text-blue-600">{item.post_count} 개</span>
+                                <span className="text-2xl font-bold">작성</span>
                             </div>
                         </div>
                     ))}
@@ -88,10 +85,7 @@ const Question = () => {
             </div>
 
             {/* 월별 질문 등록 횟수 조회 */}
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white p-6 rounded-lg shadow-lg space-y-4 mb-10"
-            >
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg space-y-4 mb-10">
                 <p className="text-xl font-semibold text-gray-800">월별 질문 등록 횟수 조회</p>
                 <div className="flex gap-4">
                     <select
@@ -113,12 +107,6 @@ const Question = () => {
                         value={selectedData.year}
                     />
                 </div>
-                <button
-                    type="submit"
-                    className="w-full p-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
-                >
-                    검색
-                </button>
             </form>
 
             {/* 월별 질문 등록 횟수 */}
@@ -139,7 +127,7 @@ const Question = () => {
             </div>
 
             {/* 년별 질문 등록 횟수 */}
-            <div className="mt-10">
+            <div className="mt-5">
                 <p className="p-6 text-xl font-semibold text-gray-800">년별 질문 등록 횟수 조회</p>
                 <LineChart
                     width={1100}

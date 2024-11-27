@@ -19,14 +19,14 @@ type GetAllData = {
 const Dashboard = () => {
     // 각 통계 API 호출
     const {
-        data: popularTopics,
+        data: popularTopics = [],
         error: topicsError,
         isLoading: isLoadingTopics,
     } = useFetchData<PopularTopicData[]>(['popularTopics'], '/api/v1/admin/get/popular/topics', "GET");
 
     // 전체 질문 및 댓글 수 API 호출
     const {
-        data: totalUserCommentQuestion,
+        data: totalUserCommentQuestion = [],
         error: totalUserCommentQuestionError,
         isLoading: isLoadingTotalUserCommentQuestion,
     } = useFetchData<GetAllData[]>(['totalUserCommentQuestion'], '/api/v1/admin/get/all/data', 'GET');
@@ -35,7 +35,7 @@ const Dashboard = () => {
     if (topicsError || totalUserCommentQuestionError) return <div>Error occurred</div>;
 
     return (
-        <div className="p-10 grid">
+        <>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
                 {/* 전체 사용자 */}
                 <DataCard
@@ -60,8 +60,7 @@ const Dashboard = () => {
                 {/* Chart Section */}
                 <div className="lg:col-span-3 space-y-4">
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">최근 인기있는 주제</h2>
-                    <BarChart width={600} height={400} data={popularTopics}
-                              margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                    <BarChart width={600} height={400} data={popularTopics} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="topic" interval={0} angle={-45} textAnchor="end"/>
                         <YAxis/>
@@ -84,7 +83,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
